@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+
+<body>
+  <div id="app">
+    <section class="mx-auto max-full md:max-w-2xl mt-4">
+      <h1 class="py-2 text-2xl font-bold">Fuja do Russo</h1>
+
+      <div class="flex flex-col">
+        <span>Carteira {{ maxTokens }}</span>
+        <span>Dinheiro na Aposta {{ reward }}</span>
+        <span>Carteira + Dinheiro na Aposta {{ Number(reward) + Number(maxTokens)}}</span>
+
+      </div>
+
+
+      <div class="flex flex-col space-y-1 py-2">
+        <button class="bg-blue-200 p-2 rounded h-12 w-12" @click="selectAnswer(index)" v-for="(o, index) in options"
+          :key="options">{{ index }}</button>
+      </div>
+
+      <span class="bg-blue-300 p-2 rounded w-12 py-2 text-sm">1.29</span>
+
+
+      <div class="flex space-x-2 py-2">
+        <button class="rounded bg-orange-200 p-2" @click="playGame()">Jogar</button>
+        <input class="p-2 rounded bg-blue-100" v-model="betValue" placeholder="Valor Apostado">
+        <button class="rounded bg-green-200 p-2" @click="resetValues()">Resetar</button>
+
+      </div>
+
+    </section>
+  </div>
+  <script>
+    Vue.createApp({
+      data() {
+        return {
+          options: [0, 1, 2, 3],
+          betValue: 5,
+          tokens: 200,
+          maxTokens: 10000,
+          wrong: null,
+          select: null,
+          reward: 0,
+          message: 'Hello Vue!'
+        }
+      },
+      methods:
+      {
+
+        newRound: function () {
+          this.wrong = Math.floor(Math.random() * (3));
+        },
+
+        playGame: function () {
+          this.maxTokens -= this.betValue;
+          this.reward = this.betValue;
+        },
+
+        selectAnswer: function (index) {
+          this.select = index;
+
+          if (this.select != this.wrong) {
+            this.reward *= 1.29
+          }
+
+          else {
+            this.maxTokens -= this.betValue;
+            this.reward = 0;
+          }
+
+          this.newRound();
+
+        },
+
+        resetValues: function () {
+          this.maxTokens = 10000;
+        }
+
+      },
+      created: function () {
+        this.newRound()
+      }
+    }).mount('#app')
+  </script>
+
+</body>
+
+</html>
